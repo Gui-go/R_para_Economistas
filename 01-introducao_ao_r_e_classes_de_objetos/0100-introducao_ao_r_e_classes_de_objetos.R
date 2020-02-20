@@ -1,17 +1,36 @@
-# Introdução ao R e classes de objetos
+####   Introdução ao R e classes de objetos
+
+###   Apresentação - Mosrtar a sintaxe do R, janelas, script, console, environment
 
 print("Olá, mundo!!")
 
-variavel <- print(x = "Olá, mundo!!")
+variavel <- "Olá, mundo!!"
 variavel
 
+var1 <- 2
+var2 <- 13
 
-# R != RStudio
+var3 <- var1 * var2
+var3
+
+###   Diferentemente de nós humanos, o R, assim como qualquer outra linguagem de programação, 
+###   não possui capacidade de abstração.
+
+###   Em termos mais claros, o que deve-se deixar claro é que por vezes seu código irá retornar 
+###   Resultados inesperados e dependerá da sua capacidade de abstração para perceber erros de sintaxe.
+
+###   O R é "case sensitive" e por vezes basta uma boa revisão do código para resolver alguns obstaculos.
 
 
-### Introdução ao R e classes de objetos
+#   R != RStudio
 
-## integer
+#   R:   https://www.r-project.org/
+#   RStudio:   https://rstudio.com/
+
+
+###   Introdução ao R e classes de objetos
+
+##   integer
 1
 -2
 0
@@ -22,7 +41,7 @@ b <- 6
 c <- 12
 d <- -10
 
-# Aritmética básica
+#   Aritmética básica
 1+1
 333-33
 b*d
@@ -30,11 +49,11 @@ e <- c/b
 d^e
 f <- a/b
 
-## Questão
-# Pedrinho comprou um lote com 15 metros de largura e 88 de comprimento. 
-# Qual a área do lote de Pedrinho?
+##   Questão
+#   Pedrinho comprou um lote com 15 metros de largura e 88 de comprimento. 
+#   Qual a área do lote de Pedrinho?
 
-# Solução: 
+#   Solução: 
 
 
 ## numeric
@@ -92,10 +111,12 @@ ls() # Lista os objetos do ambiente (environment)
 help(ls) # Função para saber mais sobre alguma função
 ?ls() # Prefiro assim...
 
-v6 <- c(1,1,2,2,2,1,2,1,3,1000)
+v6 <- c(9,1,2,2,2,1,2,1,3,1000)
 mean(v6) # Média
 median(v6) # Mediana
 summary(v6) # Sumario
+sort(v6)
+
 
 
 # Questão
@@ -163,9 +184,15 @@ mean(v8)^3>=sum(v8)^2
 
 v8[v8>=50] # Todos os elementos do vetor maiores ou iguais a 50
 v8[v8>=50] <- 0
+
 # mais boolean
 
+#  &
+#  |
 
+
+T == TRUE
+F == FALSE
 
 
 ### Algumas funcões úteis
@@ -273,6 +300,9 @@ solve(m2)
 
 
 
+# Questão:
+# Resolva esse sistema linear através de Kran
+
 
 
 
@@ -310,19 +340,59 @@ c7 <- 'Há sempre uma "alternativa"'
 c8 <- "Há sempre uma \"alternativa\""
 c7==c8
 
-
-str_detect(c7)
+str_detect(string = c7, pattern = "sem")
 
 
 
 ## data.frame
 
+df <- data.frame(
+  col1 = c(1,2,3,4,5,6,7,81,92,100),
+  col2 = c("um", "dois", "tres", "quatro", "cinco", "seis", "sete", "outro", "n0ve", "Dez"),
+  col3 = c(T, T, T, T, T, T, T, F, F, F),
+  col4 = c(110:101),
+  col5 = rep("repita"),
+  col6 = seq(from = as.Date("2020/01/01"), by = "quarter", length.out = 10)
+)
+
+df
+View(df) # Para ver o dataset em uma aba separata de modo mais organizado
 
 
-head()
-tail()
-rep()
-sort()
+head(df) # As 6 primeiras observações
+head(df, n = 3)
+
+tail(df) # As ultimas 6 observaçoes
+tail(df, 4)
+
+
+# Para selecionar um extrato de um dataframe, podemos:
+df$col1
+df[, "col1"]
+df[,1]
+df[[1]]
+df[["col1"]]
+df[,c(T,F,F,F,F,F,F,F,F,F)]
+
+df[8,6]
+df[9, "col1"]
+df[c(1,2,3), c("col1", "col3")]                     #   Não esqueça de vetorizar com "c()"
+df[c(1,2),c(1,2,3,4)]
+df[df$col3==FALSE, c("col2", "col4", "col6")]
+df[df$col1 >= 5, c(1,2,3,4,5)]
+
+df[df$col3!=FALSE & df$col1 >= 5, ]                 #   & (E comercial) -> para condições simultaneas
+df[df$col1 >= 90 | df$col1 <= 2,]                   #   | (pipe)(ou) -> para condições não simultaneas
+
+df[df$col3==FALSE & df$col1 >= 90, c(1,2,3)]
+df[(df$col1 >= 80 & df$col1 <= 92) | df$col2 == c("um", "dois"), c(1,2,3)]
+
+# Bora consertar o df
+df
+
+df[c(8,9,10), 1] <- c(8,9,10)
+df$col2[c(8,9,10)] <- c("oito", "nove", "dez")
+df[["col3"]][c(8,9,10)] <- T
 
 
 
