@@ -398,7 +398,57 @@ df[["col3"]][c(8,9,10)] <- T
 
 ## list
 
+ll <- list(
+  item1 = 1,
+  item2 = c(1,2,3),
+  item3 = "string",
+  item4 = c("vetor", "de", "strings"),
+  item5 = c("vetor", "misto", 10, 300, 3.14, 7.322223),
+  item6 = matrix(c(1,2,3,4), nrow = 2, byrow = T),
+  item7 = data.frame(
+    var1 = c(10,20,30),
+    var2 = c("vetor", "de", "strings"),
+    var3 = 11:13,
+    var4 = seq.Date(from = as.Date("2020/01/01"), by = "month", length.out = 3)
+  )
+)
 
+ll
+
+str(ll) # Para detalhes sobre o objeto
+
+ll[["item4"]]
+ll[["item7"]][["var1"]]
+ll[["item7"]]["var1"]      #   Retorna a coluna
+ll[["item7"]][,"var1"]     #   Retorna o vetor
+ll[["item7"]][,"var1"][2]
+
+
+
+
+
+# Gráficos R-base
+library(stats)         # Provavelmente o pacote {stats} já está instalado
+stats
+
+?cars
+stats::cars
+
+?plot                  # Para mais info sobre o função mais básica para se plotar gráficos em R
+
+plot(cars)
+
+
+# Pacotes em R
+library(utils)
+read.csv(file = "", header = T, sep = ";", dec = ",", stringsAsFactors = F, encoding = "UTF-8")
+
+
+
+
+# ggplt2, o principal pacote para grafos em r
+install.packages("ggplot2")
+library("ggplot2")
 
 
 
@@ -413,11 +463,17 @@ df[["col3"]][c(8,9,10)] <- T
 
 # 1. Linguagem R - Wikipedia = https://pt.wikipedia.org/wiki/R_(linguagem_de_programa%C3%A7%C3%A3o)
 
+# 2. Livro - R for datascience = https://r4ds.had.co.nz/
+#            R for datascience = Melhor livro introdutório de programação em R e data science
+
+
 # 2. r-base - Curso R = https://www.curso-r.com/material/r-base/
 
 # 2. Vocabulary - Advanced R = http://adv-r.had.co.nz/Vocabulary.html
+#                 Advanced R = É um livro por Hadley Wickham de programação avançada em R
 
 # 3. Trends - Stack overflow = https://insights.stackoverflow.com/trends?tags=r%2Cpython
+#             Stack overflow = Fórum de programação mt útil pra troca de conhecimento e soluções para problemas e bugs
 
 # 4. App - Datacamp = AppStore
 
