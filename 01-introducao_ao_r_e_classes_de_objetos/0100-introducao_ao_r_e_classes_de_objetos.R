@@ -13,8 +13,8 @@ var2 <- 13
 var3 <- var1 * var2
 var3
 
-###   Diferentemente de nós humanos, o R, assim como qualquer outra linguagem de programação, 
-###   não possui capacidade de abstração.
+###   Diferentemente de nós humanos, o R, assim como outras linguagens de programação, 
+###   não possui boa capacidade de abstração.
 
 ###   Em termos mais claros, o que deve-se deixar claro é que por vezes seu código irá retornar 
 ###   Resultados inesperados e dependerá da sua capacidade de abstração para perceber erros de sintaxe.
@@ -61,7 +61,7 @@ f <- a/b
 1.2
 f
 pi
-e
+
 
 # Aritimética intermediaria
 (2*(1+3)+3^2*(1+1))
@@ -69,7 +69,6 @@ aa <- (4/(5-1)+5*(10/2))/3
 aa
 (88*17)/(4/2)
 bb <- (88*17)/(4/2)
-
 
 
 ## vector
