@@ -12,11 +12,15 @@ library(dplyr)
 library(zoo)
 
 # dados -------------------------------------------------------------------
+library(sidrar)
+#   https://analisemacro.com.br/economia/dados-macroeconomicos/baixando-dados-do-sidra-com-o-r-o-pacote-sidrar/
+
 dados_sidra <- get_sidra(
   api = "/t/1846/n1/all/v/all/p/all/c11255/90707,93404,93405,93406,102880/d/v585%200")
 
+
 # ETL ---------------------------------------------------------------------
-CNT <- dados_sidra %>%
+cnt <- dados_sidra %>%
   select(`Setores e subsetores`, Trimestre, Valor) %>%
   mutate(Var = str_replace_all(
     `Setores e subsetores`, c("PIB a preços de mercado" = "PIB",
@@ -29,7 +33,7 @@ CNT <- dados_sidra %>%
   filter(Ano >= 2000) %>%
   select(Var, Ano, Tri, Valor)
 
-l_CNT <- split(CNT, CNT$Var)
+l_cnt <- split(cnt, cnt$Var)
 
 I_macro <- cbind(
   l_CNT$PIB["Ano"],
@@ -68,8 +72,18 @@ ggplot(dados_ts, aes(seq(as.Date("2000/1/1"), by = "quarter", length.out = 78)))
                          " to ",
                          I_macro$ano[nrow(I_macro)]),
        y = "% chained variance",
-       x = "Tempo",
-       caption = "Guilherme Viegas")+
+       x = "",
+       caption = "R_para_Economistas")+
   theme_minimal()+
   theme(plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjust = 0.5))
+
+
+
+# IS LM
+
+
+
+library(markdown)
+library(tinytex)
+tinytex::install_tinytex()

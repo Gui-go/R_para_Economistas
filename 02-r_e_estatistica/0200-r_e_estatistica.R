@@ -42,6 +42,14 @@ ggplot(data = mtcars, mapping = aes(x = mtcars$hp, y = mtcars$mpg)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE, color = "red")
 
+ggplot2::ggplot(data = mtcars) +
+  ggplot2::geom_point(mapping = aes(x = mtcars$hp, y = mtcars$mpg))
+
+ggplot(data = mtcars) +
+  geom_point(mapping = aes(x = mtcars$hp, y = mtcars$mpg)) +
+  geom_smooth(mapping = aes(x = mtcars$hp, y = mtcars$mpg), method = "lm", se = FALSE, color = "red")
+
+
 # Regressão linear simples
 ?lm()
 
@@ -77,6 +85,8 @@ ggplot(data = mtcars, aes(x = mtcars$hp, y = mtcars$mpg)) +
 
 
 # \n  para uma nova linha
+
+# correlation graph w\ error distances
 
 # Estatística descritiva
 # Oq é
@@ -118,11 +128,10 @@ autoplot(sqts)+
 
 
 
-# Nice inflation history plotly graph
 
 # Boxplot graf inflation
 library(dplyr)
-sq3 <- sq2 %>% filter(between(Date, as.Date("2000-01-01"), as.Date("2020-01-01")))
+sq3 <- sq2 %>% filter(between(Date, as.Date("2005-01-01"), as.Date("2020-01-01")))
 sp <- data.frame(mes = substr(sq3[seq(1:nrow(sq3)),1], 6 , 7),
                  ano = substr(sq3[seq(1:nrow(sq3)),1], 1 , 4),
                  dados = sq3[1:nrow(sq3), 2])
@@ -130,7 +139,7 @@ str(sp)
 # SP <- SP[input$SLDAD[1]:input$SLDAD[2],]
 
 ggplot(sp , aes(x = factor(sp$mes, levels = c("01","02","03","04","05","06","07","08","09","10","11","12"), ordered = T),
-                      y = sp$dados, group = sp$mes))+
+                y = sp$dados, group = sp$mes))+
   geom_boxplot()+
   stat_summary(fun.y = mean, geom = "point", shape = 18, size = 1, color = "red", alpha = 0.8)+
   labs(title = "Box Plot dividido entre os meses do ano",
@@ -139,8 +148,32 @@ ggplot(sp , aes(x = factor(sp$mes, levels = c("01","02","03","04","05","06","07"
   geom_hline(yintercept = median(sp$dados), color = "blue")+
   theme_minimal()
 
+# Nice inflation history plotly graph
 
 
 
 
 # Estatístca indutiva
+
+sq3   # df from = as.date("2005-01-01")
+sqts <- ts(sq3[,2], start = c(as.numeric(substring(sq3[1,1],1,4)), as.numeric(substring(sq3[1,1],6,7))), frequency = 12)
+library(forecast)
+tsa <- auto.arima(sqts, seasonal = T, trace = F, ic = "aic")
+ff <- forecast(tsa, h=12)
+
+# nn <- arima_data()[["arma"]]
+# ff <- forecast(arima_data(), h = input$hor)
+library(ggplot2)
+autoplot(ff)+
+  autolayer(ff$mean, color = "blue")+
+  labs(y = "IPCA...", 
+       x = "Observações")+
+  theme(legend.position = "none")+
+  theme_minimal()
+
+
+# Questão 23
+# Projete os proximos 6 valores para a série 1518, a partir de uma amostra de as.Date("2010-01-01") e as.Date("2020-01-01"), através de um auto.arima() que minimize "bic"
+
+
+

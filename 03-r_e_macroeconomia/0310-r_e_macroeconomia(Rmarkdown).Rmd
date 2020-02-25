@@ -1,0 +1,76 @@
+---
+title: "0310-r_e_macroeconomia"
+author: "R_para_Economistas"
+date: "2/25/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+```
+
+# Dumentos dinâmicos com R Markdown
+## Tutorial 1
+
+Este é um documento R Markdown, uma maneira simples de criar documentos dinâmicos em HTML, PDF, entre outros.
+Para mais detalhes, acesse <http://rmarkdown.rstudio.com> ou [Cheatsheet](https://rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf)
+
+
+Quando você clicar no botão **Knit**, os códigos dentro de **chunks ´´´{r}´´´** serão renderizados e o documento R Markdown poderá ser visualizado. Veja o exemplo;
+
+```{r mtcars}
+summary(mtcars)
+```
+
+## Incluindo gráficos
+
+```{r pressure, echo=FALSE}
+    ggplot(mtcars, aes(x = as.factor(cyl), fill = as.factor(cyl))) + 
+      geom_bar() +
+      labs(fill = "cyl") +
+  theme_minimal()
+```
+
+Note que o parâmetro `echo = FALSE` foi acionado para previnir que o código desse chunk fosse renderizado.
+
+# É possível acionar as seguintes opções de chunks:
+
+include = FALSE previne que o código e resultado apareçam no arquivo final. O R Markdown continua rodando o código, ele apenas não é exibido, podendo mesmo ser utilizado em um chunk posterior.
+
+echo = FALSE Exibe apenas o resultado, não o código. 
+
+message = FALSE Não permite que mensagens apareçam no arquivo final.
+
+warning = FALSE Não permite que warnings apareçam no arquivo final.
+
+fig.cap = "..." adiciona legenda no resultado gráfico.
+
+Outros...
+
+
+
+
+# podemos incluir mapas em nossas análises também
+```{r mapa1, echo=FALSE}
+#install.packages("brazilmaps")
+library(brazilmaps)
+BR <- get_brmap("City", geo.filter = list(State = 31) )
+
+pop2017$logpop <- log(pop2017$pop2017)
+
+plot_brmap(BR, data_to_join = pop2017, 
+                    join_by = c("City" = "mun"), 
+                      var = "logpop")
+```
+
+
+
+# Neste chunk vamos calcular alguns parâmetros, mas ainda não vamos os mostrar
+```{r par1, include=FALSE}
+
+media_mtcars_mpg <- mean(mtcars$mpg)
+
+```
+
+# Agora podemos escrever com valores dinâmicos. Ou seja, a variável **media_mtcars_mpg** neste momento é igual a `r media_mtcars_mpg`. Contudo, em análises futuras, ela pode ser alterada com a inclusão ou exclusão de observações. Esse é um dos motivos que documentos R Markdown são tão úteis.
