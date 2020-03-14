@@ -85,15 +85,8 @@ knitr::kable(mtcars)
 
 ##  Assim como formulas matemáticas $A=\pi*r^2$
 - Formulas in-line ficam em torno de apenas um cifrão \$formula em latex\$
-- Formulas em torno de dois cifrões serão isoladas em uma nova linha $$ x^2 + y^2 = z^2 $$
-
-
-## Podemos até mesmo incluir código de outras liguagens, como Python, JavaScript, C++, etc
-```{python ling2}
-
-
-```
-
+- Formulas em torno de dois cifrões serão isoladas em uma nova linha 
+$$ x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a} $$
 
 
 ##  Vc pode ter mais informações sobre R Markdown em

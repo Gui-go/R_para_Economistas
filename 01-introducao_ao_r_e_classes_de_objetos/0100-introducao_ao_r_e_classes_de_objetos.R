@@ -476,5 +476,6 @@ library("ggplot2")
 
 # 4. App - Datacamp = AppStore
 
-
+# 5. Cheatsheet
+# https://rstudio.com/resources/cheatsheets/
 

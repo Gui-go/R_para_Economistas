@@ -1,0 +1,100 @@
+---
+title: "0320remacro"
+author: "R_para_Economistas"
+date: "3/14/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+# install.packages(c("openssl", "httr", "rvest", "tidyverse", "ggfortify", "zoo", "kableExtra", "sidrar"))
+library(openssl)
+library(httr)
+library(rvest)
+library(tidyverse) # Conjunto de pacotes {ggplot2, dplyr, tidyr, readr, purrr, tibble, stringr, forcats}
+library(ggfortify)
+library(zoo)
+library(forecast)
+library(kableExtra)
+library(DT)
+library(sidrar)
+
+theme_set(theme_classic())   # Todos os mapas virão com theme_classic() como default 
+```
+
+# Análise Macroeconomica com R Markdown
+
+## Este é um documento R Markdown, uma maneira simples de criar documentos dinâmicos em HTML, PDF, entre outros formatos.
+Para mais detalhes, acesse <http://rmarkdown.rstudio.com> ou [Cheatsheet](https://rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf)
+
+
+```{r api_sidra}
+dados_sidra <- get_sidra(
+  api = "/t/1846/n1/all/v/all/p/all/c11255/90707,93404,93405,93406,102880/d/v585%200")
+
+```
+
+Após feita a manipulação na base de dados, chegamos a um dataset como o seguinte:
+
+```{r chunk2, echo=FALSE, message=FALSE}
+cnt <- dados_sidra %>%
+  select(`Setores e subsetores`, Trimestre, Valor) %>%
+  rename(
+    "setores" = `Setores e subsetores`, 
+    "trimestre" = Trimestre,
+    "valor" = Valor
+  ) %>% 
+  mutate(var = str_replace_all(
+    setores, c("PIB a preços de mercado" = "PIB",
+                              "Despesa de consumo das famílias" = "C",
+                              "Despesa de consumo da administração pública" = "G",
+                              "Formação bruta de capital fixo" = "FBKF",
+                              "Variação de estoque" = "VE"))) %>%
+  mutate(ano = as.integer(str_sub(trimestre, start = -4))) %>%
+  mutate(tri = as.integer(str_sub(trimestre, end = 1))) %>%
+  filter(ano >= 2000) %>%
+  select(var, ano, tri, valor)
+
+l_cnt <- split(cnt, cnt$var)
+
+i_macro <- cbind(
+  l_cnt$PIB["ano"],
+  l_cnt$PIB["tri"],
+  l_cnt$PIB["valor"],
+  l_cnt$C["valor"],
+  c(l_cnt$FBKF["valor"] + l_cnt$VE["valor"]),
+  l_cnt$G["valor"]
+)
+
+names(i_macro) <- c("ano", "tri", "PIB", "C", "I", "G")
+
+# Poderiamos representar o n de linhas hardcoded como a seguir
+chained <- data.frame(PIB = rep(0, 80), C = rep(0, 80), I = rep(0, 80), G = rep(0, 80))
+# mas seria mais interessante dinamizarmos o script para que futuras análises possam ser reproduzidas automaticamente
+chained <- data.frame(PIB = rep(0, nrow(i_macro)), C = rep(0, nrow(i_macro)), I = rep(0, nrow(i_macro)), G = rep(0, nrow(i_macro)))
+
+# Índice encadeado
+for (i in 1:(nrow(i_macro)-4)) {
+  chained$PIB[i+4] <- ((i_macro[i+4, "PIB"]-i_macro[i, "PIB"])/i_macro[i+4, "PIB"])*100
+  chained$C[i+4] <- ((i_macro[i+4, "C"]-i_macro[i, "C"])/i_macro[i+4, "C"])*100
+  # 2
+  chained$I[i+4] <- ((i_macro[i+4, "I"]-i_macro[i, "I"])/i_macro[i+4, "I"])*100
+  chained$G[i+4] <- ((i_macro[i+4, "G"]-i_macro[i, "G"])/i_macro[i+4, "G"])*100
+}
+
+dados_tsp <- ts(chained, start = c(i_macro$ano[1], i_macro$tri[1]), freq = 4)
+
+dados_ts <- window(dados_tsp, start = c(2001, 1))    # Devido ao método encadeado, o ano de 2000 acaba sendo == 0
+
+df_cnt <- data.frame(
+  ano = rep(2000:2019, each=4),
+  tri = rep(c(1:4), length.out = nrow(chained)),
+  chained
+)
+
+
+DT::datatable(df_cnt)
+# knitr::kable(df_cnt)# %>% 
+  # kable_styling() %>%
+  # scroll_box(width = "100%", height = "200px")
+```
+
