@@ -1,8 +1,8 @@
 ---
-title: "0320remacro"
+title: "0320-R_e_macroeconomia"
 author: "R_para_Economistas"
-date: "3/14/2020"
-output: pdf_document
+date: "2/25/2020"
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
@@ -14,8 +14,8 @@ library(tidyverse) # Conjunto de pacotes {ggplot2, dplyr, tidyr, readr, purrr, t
 library(ggfortify)
 library(zoo)
 library(forecast)
-library(kableExtra)
 library(DT)
+library(ggplot2)
 library(sidrar)
 
 theme_set(theme_classic())   # Todos os mapas virão com theme_classic() como default 
@@ -23,11 +23,11 @@ theme_set(theme_classic())   # Todos os mapas virão com theme_classic() como de
 
 # Análise Macroeconomica com R Markdown
 
-## Este é um documento R Markdown, uma maneira simples de criar documentos dinâmicos em HTML, PDF, entre outros formatos.
+#### Este é um documento R Markdown, uma maneira simples de criar documentos dinâmicos em HTML, PDF, entre outros formatos.
 Para mais detalhes, acesse <http://rmarkdown.rstudio.com> ou [Cheatsheet](https://rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf)
 
 
-```{r api_sidra}
+```{r api_sidra, message=FALSE}
 dados_sidra <- get_sidra(
   api = "/t/1846/n1/all/v/all/p/all/c11255/90707,93404,93405,93406,102880/d/v585%200")
 
@@ -92,9 +92,35 @@ df_cnt <- data.frame(
 )
 
 
-DT::datatable(df_cnt)
-# knitr::kable(df_cnt)# %>% 
-  # kable_styling() %>%
-  # scroll_box(width = "100%", height = "200px")
+DT::datatable(
+  df_cnt, 
+  caption = "R_para_Econmistas", 
+  filter = 'top', 
+  options = list(pageLength = 16, autoWidth = TRUE)
+)
 ```
 
+
+
+```{r chunk3, echo=FALSE, message=FALSE, fig.width=12, fig.height=8}
+
+ggplot(dados_ts[, "PIB"], aes(seq(as.Date("2001/1/1"), by = "quarter", length.out = nrow(dados_ts))))+
+  geom_line(aes(y = dados_ts[, "PIB"]), size = 1.1, color = "darkblue")+
+  geom_line(aes(y = dados_ts[, "C"]), size = 1.1, color = "darkgreen")+
+  geom_line(aes(y = dados_ts[, "I"]), size = 1.1, color = "cadetblue3")+
+  geom_line(aes(y = dados_ts[, "G"]), size = 1.1, color = "red")+
+  geom_hline(yintercept = mean(chained$I[5:length(chained$I)], na.rm = T), color = "cadetblue3", size = 1.05)+
+  geom_hline(yintercept = 0, lty = "dashed")+
+  labs(title = "Indicadores Macroeconomicos Brasileiros Encadeados",
+       subtitle = paste0("Variáveis encadeadas com o mesmo trimestre do ano anterior de ",
+                         i_macro$ano[1],
+                         " à ",
+                         i_macro$ano[nrow(i_macro)]),
+       y = "% de variação encadeada com o trimestre do ano anterior",
+       x = "",
+       caption = "R_para_Economistas")+
+  theme_minimal()+
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5))
+
+```
