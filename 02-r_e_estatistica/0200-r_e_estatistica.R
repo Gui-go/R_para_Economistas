@@ -1,9 +1,10 @@
 # R e estatística
 
 # Dataset para nossa análise
-?datasets                    # The R Datasets Package
-?datasets::mtcars            # {Motor Trend Car Road Tests} Perfermance de 32 modelos de carro dos anos 70
-datasets::mtcars
+?datasets                                # Pacote com vários datasets
+?datasets::mtcars                        # {Motor Trend Car Road Tests} Perfermance de 32 modelos de carro dos anos 70
+datasets::mtcars                         # Do pacote dataset, chame mtcars
+mtcars                       
 View(mtcars)
 str(mtcars)
 summary(mtcars)
@@ -13,13 +14,14 @@ min(mtcars$mpg)
 max(mtcars$cyl)
 mean(mtcars$disp)
 median(mtcars$hp)
-sd(mtcars$drat)
-quantile(mtcars$wt)
-quantile(mtcars$qsec, probs = 0.13)
+sd(mtcars$drat)                           # Standard Deviation - Desvio Padrão
+quantile(mtcars$wt)                       # Quartil
+quantile(mtcars$qsec, probs = 0.13)       # Percentil
 
 
 
 # A medida de correlação, r, é uma das mais importantes para a analise estatística.
+# [-1, 1]
 # Em R, podemos calcular tal a correlação com a função    cor()
 ?cor()
 
@@ -29,14 +31,24 @@ cor(mtcars$mpg, mtcars$cyl)     # Milhas por galao x # cilindros
 
 ## Questao 1
 # Assim como podemos calcular a area de um circulo com a formula   A = pi * r ^ 2
+A <- function(r){
+  area = pi * r ^ 2
+  return(area)
+}
+A(2)
 # Defina uma função de correlação e a compare com a função    stats::cor()
 
 
-# Pacote que utilizaremos para visualizações gráficas
+# Talvez o mais popular pacote para visualização de gráficos em R seja o {ggplot2}
 library(ggplot2)
 
 ggplot2::ggplot(data = mtcars, mapping = aes(x = mtcars$hp, y = mtcars$mpg)) +
   ggplot2::geom_point()
+
+# Perceba que os paraametros não precisam estar explicitos, contando que as funções e argumentos estejam na ordem correta.
+ggplot(mtcars, aes(mtcars$hp, mtcars$mpg)) +
+  geom_point()
+
 
 ggplot(data = mtcars, mapping = aes(x = mtcars$hp, y = mtcars$mpg)) +
   geom_point() +
@@ -176,4 +188,14 @@ autoplot(ff)+
 # Projete os proximos 6 valores para a série 1518, a partir de uma amostra de as.Date("2010-01-01") e as.Date("2020-01-01"), através de um auto.arima() que minimize "bic"
 
 
+
+
+
+
+
+
+
+## Recomendações
+# Pacote Esquisse
+# Radiant
 

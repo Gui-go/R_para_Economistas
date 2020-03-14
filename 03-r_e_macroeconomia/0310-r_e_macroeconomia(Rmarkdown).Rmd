@@ -8,16 +8,18 @@ output: pdf_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(ggplot2)
+library(forecast)
+theme_set(theme_classic())   # Todos os mapas virão com theme_classic() como default 
 ```
 
-# Dumentos dinâmicos com R Markdown
-## Tutorial 1
+# Documentos dinâmicos com R Markdown
+## Tutorial R Markdown
 
-Este é um documento R Markdown, uma maneira simples de criar documentos dinâmicos em HTML, PDF, entre outros.
+## Este é um documento R Markdown, uma maneira simples de criar documentos dinâmicos em HTML, PDF, entre outros.
 Para mais detalhes, acesse <http://rmarkdown.rstudio.com> ou [Cheatsheet](https://rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf)
 
 
-Quando você clicar no botão **Knit**, os códigos dentro de **chunks ´´´{r}´´´** serão renderizados e o documento R Markdown poderá ser visualizado. Veja o exemplo;
+## Quando você clicar no botão **Knit** (ctrl+shift+k), os códigos dentro de **chunks ´´´{r}´´´** serão renderizados e o documento R Markdown poderá ser visualizado. Veja o exemplo:
 
 ```{r mtcars}
 summary(mtcars)
@@ -25,52 +27,77 @@ summary(mtcars)
 
 ## Incluindo gráficos
 
-```{r pressure, echo=FALSE}
+```{r plot1, echo=FALSE, fig.align='right', fig.height=3, fig.width=3}
+
     ggplot(mtcars, aes(x = as.factor(cyl), fill = as.factor(cyl))) + 
       geom_bar() +
       labs(fill = "cyl") +
   theme_minimal()
-```
-
-Note que o parâmetro `echo = FALSE` foi acionado para previnir que o código desse chunk fosse renderizado.
-
-# É possível acionar as seguintes opções de chunks:
-
-include = FALSE previne que o código e resultado apareçam no arquivo final. O R Markdown continua rodando o código, ele apenas não é exibido, podendo mesmo ser utilizado em um chunk posterior.
-
-echo = FALSE Exibe apenas o resultado, não o código. 
-
-message = FALSE Não permite que mensagens apareçam no arquivo final.
-
-warning = FALSE Não permite que warnings apareçam no arquivo final.
-
-fig.cap = "..." adiciona legenda no resultado gráfico.
-
-Outros...
-
-
-
-
-# podemos incluir mapas em nossas análises também
-```{r mapa1, echo=FALSE}
-#install.packages("brazilmaps")
-library(brazilmaps)
-BR <- get_brmap("City", geo.filter = list(State = 31) )
-
-pop2017$logpop <- log(pop2017$pop2017)
-
-plot_brmap(BR, data_to_join = pop2017, 
-                    join_by = c("City" = "mun"), 
-                      var = "logpop")
-```
-
-
-
-# Neste chunk vamos calcular alguns parâmetros, mas ainda não vamos os mostrar
-```{r par1, include=FALSE}
-
-media_mtcars_mpg <- mean(mtcars$mpg)
 
 ```
 
-# Agora podemos escrever com valores dinâmicos. Ou seja, a variável **media_mtcars_mpg** neste momento é igual a `r media_mtcars_mpg`. Contudo, em análises futuras, ela pode ser alterada com a inclusão ou exclusão de observações. Esse é um dos motivos que documentos R Markdown são tão úteis.
+## Note que os parâmetros `echo = FALSE, fig.align='right', fig.height=3, fig.width=3` foram acionados.
+
+##  É possível acionar as seguintes opções de chunks:
+
+- include = FALSE previne que o código e resultado apareçam no arquivo final. O R Markdown continua rodando o código, ele apenas não é exibido, podendo mesmo ser utilizado em um chunk posterior.
+- echo = FALSE Exibe apenas o resultado, não o código. 
+- message = FALSE Não permite que mensagens apareçam no arquivo final.
+- warning = FALSE Não permite que warnings apareçam no arquivo final.
+- fig.cap = "..." adiciona legenda no resultado gráfico.
+- fig.align = 'right' Alinha a figura na direita do documento. 
+- fig.height = 3 A figura toma altura 3 (de 12)
+- fig.width = 3 A figura toma comprimento 3 (de 12)
+- Outros...
+
+## Podemos realizar manipulações nos dados sem necessariamente mostrar ao público.
+```{r etl1, include=FALSE}
+# Vc pode usar window() para colher uma amostra de uma série temporal
+nottem_small <- window(nottem, start=c(1920, 1), end=c(1925, 12))
+
+media_temp <- round(mean(nottem_small), 2)
+
+```
+##  Só inclua o que for interessante para seu público
+
+```{r plot2, echo=FALSE}
+ggseasonplot(nottem_small) + 
+  geom_hline(yintercept = media_temp, color="red")
+  labs(title="Seasonal plot: Air temperatures at Nottingham Castle")
+```
+
+
+## Podemos também usar valores dinâmicos. Ou seja, a variável **media_temp** neste momento é igual a `r media_temp`. Contudo, em análises futuras, ela pode ser alterada com a inclusão ou exclusão de observações. Esse é um dos motivos que documentos R Markdown são tão úteis. Assim, podemos ter sempre análises atuais. A data de hoje é `r Sys.Date()`
+
+
+### Para fazer tabelas, recomenda-se a função kable()
+
+```{r table1, echo=FALSE}
+knitr::kable(mtcars)
+```
+
+## R Markdown permite também os seguintes tipos de formatação
+- *itálico*
+- **bold ou negrito**
+- `code`
+- [links](markdown.rstudio.com)
+- etc
+
+##  Assim como formulas matemáticas $A=\pi*r^2$
+- Formulas in-line ficam em torno de apenas um cifrão \$formula em latex\$
+- Formulas em torno de dois cifrões serão isoladas em uma nova linha $$ x^2 + y^2 = z^2 $$
+
+
+## Podemos até mesmo incluir código de outras liguagens, como Python, JavaScript, C++, etc
+```{python ling2}
+
+
+```
+
+
+
+##  Vc pode ter mais informações sobre R Markdown em
+
+* [RMarkdown-lesson1](https://rmarkdown.rstudio.com/lesson-1.html)
+* [Cheatsheet](https://rstudio.com/wp-content/uploads/2016/03/rmarkdown-cheatsheet-2.0.pdf)
+* [Basic RMarkdown](https://rmarkdown.rstudio.com/authoring_basics.html)
