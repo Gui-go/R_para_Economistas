@@ -24,8 +24,8 @@ var3
 
 #   R != RStudio
 
-#   R:   https://www.r-project.org/
-#   RStudio:   https://rstudio.com/
+#   R:              https://www.r-project.org/
+#   RStudio:        https://rstudio.com/
 
 
 ###   Introdução ao R e classes de objetos
@@ -56,6 +56,12 @@ f <- a/b
 #   Solução: 
 
 
+
+
+
+
+
+
 ## numeric
 # numerics usam pontos (.) para representar decimais
 1.2
@@ -76,13 +82,13 @@ c(1,2,3)
 v2 <- c(1:10)
 v3 <- c(10:1)
 v4 <-c(pi:10)
-seq(1,100)
 seq(from=2, to=20)
+seq(1,100)
 seq(from=2, to=20, by=2)
 seq(from=1, to=2, length = 11)
 length(v2)
 4:length(v2)
-rep(c(1,2,3), times=5)
+rep(c(1,2,3,4), times=5)
 
 # Operações entre vetores
 v2
@@ -119,7 +125,15 @@ sort(v6)
 
 
 # Questão
-# Maria é autônoma, e nos ... (questao com distribuição)
+# Maria é autônoma e seu faturamento por dia de trabalho pode ser representado pelo seguinte vetor:
+ganhos_de_maria <- c(123,131,121,122,133,111,115,117,123,144,120,119,186,171,122,
+                     100,121,134,110,110,121,145,167,111,151,186,198,178,177,131)
+# 1) Determine quantos dias de trabalho estao sendo representados pelo vetor ganhos_de_maria
+# 2) Qual o ganho médio de Maria
+# 3) Qual o ganho mediano de Maria
+# 4) Quanto foi o maior ganho de Maria durante esse período
+
+# R:
 
 
 
@@ -217,20 +231,14 @@ min(n2)
 max(n1)
 max(n2)
 
-sd(n1) # Desvio padrão / Standard Deviation
+sd(n1) # Desvio padrão = Standard Deviation
 sd(n2)
 
 var(n1) # Variância
 var(n2)
 
-sd(n1)*sd(n1) == var(n1)                 #  var = sd^2
-sd(n2)^2 == var(n2)
-
-
-
-## Questão:
-###  Se Juliana for contratada em janeiro, com um salario inicial de 1000 e com acrescimo salarial 230 reais 
-
+var(n1) == sd(n1)*sd(n1)                 #  var = sd^2
+var(n2) == sd(n2)^2
 
 
 ## matrix
@@ -263,13 +271,13 @@ t(m2) # matriz transposta
 t(t(m2)) # transposição de uma matriz transposta é ela mesma
 
 # Operações entre matrizes (elemento a elemento)
-m2+m3
-m2+t(m3)
-m2-m2
-m2*m3 # multiplicação elemento a elemento
-m2%*%m3 # multiplicação matricial
-m2/m2
-m2^m2
+m2 + m3
+m2 + t(m3)
+m2 - m2
+m2 * m3 # multiplicação elemento a elemento
+m2 %*% m3 # multiplicação matricial
+m2 / m2
+m2 ^ m2
 
 # Funções matriciais
 m4 <- matrix(c(1,2,3,4,1,6,7,8,1), nrow = 3, byrow = F)
@@ -287,8 +295,6 @@ A <- matrix(c(4,4,-2,2,6,2,2,8,4),3,3)
 AI <- solve(A)
 
 A%*%AI
-
-
 
 solve(m2)
 
@@ -339,7 +345,8 @@ c7 <- 'Há sempre uma "alternativa"'
 c8 <- "Há sempre uma \"alternativa\""
 c7==c8
 
-str_detect(string = c7, pattern = "sem")
+
+# str_detect(string = c7, pattern = "sem")
 
 
 
@@ -351,7 +358,8 @@ df <- data.frame(
   col3 = c(T, T, T, T, T, T, T, F, F, F),
   col4 = c(110:101),
   col5 = rep("repita"),
-  col6 = seq(from = as.Date("2020/01/01"), by = "quarter", length.out = 10)
+  col6 = seq(from = as.Date("2020/01/01"), by = "quarter", length.out = 10),
+  stringsAsFactors = FALSE
 )
 
 df
@@ -373,6 +381,7 @@ df[[1]]
 df[["col1"]]
 df[,c(T,F,F,F,F,F,F,F,F,F)]
 
+# df[linha, coluna]
 df[8,6]
 df[9, "col1"]
 df[c(1,2,3), c("col1", "col3")]                     #   Não esqueça de vetorizar com "c()"
@@ -389,8 +398,8 @@ df[(df$col1 >= 80 & df$col1 <= 92) | df$col2 == c("um", "dois"), c(1,2,3)]
 # Bora consertar o df
 df
 
-df[c(8,9,10), 1] <- c(8,9,10)
-df$col2[c(8,9,10)] <- c("oito", "nove", "dez")
+df[c(8,9,10), "col1"] <- c(8,9,10)
+df[c(8,9,10), 2] <- c("oito", "nove", "dez")
 df[["col3"]][c(8,9,10)] <- T
 
 
@@ -423,34 +432,41 @@ ll[["item7"]][,"var1"]     #   Retorna o vetor
 ll[["item7"]][,"var1"][2]
 
 
+### Pacotes em R
+library(datasets)
+datasets::cars
+datasets::mtcars
+datasets::airmiles
+datasets::faithful
+datasets::iris
+datasets::Titanic
+datasets::swiss
 
 
-
-# Gráficos R-base
-library(stats)         # Provavelmente o pacote {stats} já está instalado
-stats
-
-?cars
-stats::cars
-
-?plot                  # Para mais info sobre o função mais básica para se plotar gráficos em R
-
+## Gráficos em R-base
+library(graphics)
+graphics::plot()
+?plot                  # Função mais básica para se plotar gráficos em R
 plot(cars)
+plot(cars, col="red", main="Título do gráfico", type="o", lwd=5)
 
+# Pacote para gráficos avançados
+library(ggplot2)                 # Pacote para se plotar gráficos avançados em R
+install.packages("ggplot2")      # Para instalar o pacote {ggplot2}, caso não esteja instalado
 
-# Pacotes em R
-library(utils)
-read.csv(file = "", header = T, sep = ";", dec = ",", stringsAsFactors = F, encoding = "UTF-8")
+# Pacote para funções utilitárias
+library(utils)                   # Pacote com funções utilitárias
+utils::read.csv()                # Função para ler arquivos .csv
+read.csv(file = "Endereço_do_arquivo", header = T, sep = ";", dec = ",", stringsAsFactors = F, encoding = "UTF-8")
+utils::write.csv()               # Função para salvar arquivos em .csv
+utils::citation("ggplot2")       # Função para informações para citação de pacotes R
+utils::.romans                   # Função que mostra exemplos dos numeros Romanos
 
-
-
-
-# ggplt2, o principal pacote para grafos em r
-install.packages("ggplot2")
-library("ggplot2")
-
-
-
+# Pacote para funções estatíticas
+library(stats)                   # Pacote para funções estatísticas
+stats::anova()                   # Função computa uma analise de variância - ANOVA
+stats::approx()                  # Função que retorna o mesmo vetor interpolado
+stats::cor()                     # Função que retorna a correlação entre dois vetores
 
 
 
@@ -460,22 +476,23 @@ library("ggplot2")
 ### Recomendações:
 
 
-# 1. Linguagem R - Wikipedia = https://pt.wikipedia.org/wiki/R_(linguagem_de_programa%C3%A7%C3%A3o)
+# 1. Linguagem R - Wikipedia 
+# https://pt.wikipedia.org/wiki/R_(linguagem_de_programa%C3%A7%C3%A3o)
 
-# 2. Livro - R for datascience = https://r4ds.had.co.nz/
-#            R for datascience = Melhor livro introdutório de programação em R e data science
+# 2. Livro - R for datascience - Melhor livro introdutório de programação em R e data science
+# https://r4ds.had.co.nz/
 
+# 2. r-base - Curso R 
+# https://www.curso-r.com/material/r-base/
 
-# 2. r-base - Curso R = https://www.curso-r.com/material/r-base/
+# 2. Vocabulary - Advanced R - Livro por Hadley Wickham de programação avançada em R
+# http://adv-r.had.co.nz/Vocabulary.html
 
-# 2. Vocabulary - Advanced R = http://adv-r.had.co.nz/Vocabulary.html
-#                 Advanced R = É um livro por Hadley Wickham de programação avançada em R
+# 3. Trends - Stack overflow - Fórum de programação mt útil pra troca de conhecimento e soluções para problemas e bugs
+# https://insights.stackoverflow.com/trends?tags=r%2Cpython
 
-# 3. Trends - Stack overflow = https://insights.stackoverflow.com/trends?tags=r%2Cpython
-#             Stack overflow = Fórum de programação mt útil pra troca de conhecimento e soluções para problemas e bugs
+# 4. App - Datacamp - AppStore
 
-# 4. App - Datacamp = AppStore
-
-# 5. Cheatsheet
+# 5. Cheatsheet - Folha de dicas
 # https://rstudio.com/resources/cheatsheets/
 

@@ -183,29 +183,50 @@ ggplot(df_ipca , aes(x = factor(df_ipca$mes, levels = c("01","02","03","04","05"
 
 ##
 
-# Estatístca indutiva
+# Outras séries
 
+# 
 sq3 <- Quandl::Quandl(code = "BCB/1518", type = "raw", collapse = "monthly", api_key = "gGdvN9gXsx9hxHMTWPNL")
 ser_tecidoevestuario <- sq3[seq(dim(sq3)[1],1),]     # Podemos inverter a sequencia, se nos parecer mais conveniente
+tm3 = c(as.numeric(substring(ser_tecidoevestuario[1,1],1,4)), as.numeric(substring(ser_tecidoevestuario[1,1],6,7)))
+ser_tecidoevestuario_ts <- ts(ser_tecidoevestuario[,2], start = tm3, frequency = 12)
+plot(decompose(ser_tecidoevestuario_ts))
+autoplot(decompose(ser_tecidoevestuario_ts))
 
+#
 sq4 <- Quandl::Quandl(code = "BCB/1531", type = "raw", collapse = "monthly", api_key = "gGdvN9gXsx9hxHMTWPNL")
 ser_meveiseeletro <- sq4[seq(dim(sq4)[1],1),]     # Podemos inverter a sequencia, se nos parecer mais conveniente
+tm4 = c(as.numeric(substring(ser_meveiseeletro[1,1],1,4)), as.numeric(substring(ser_meveiseeletro[1,1],6,7)))
+ser_meveiseeletro_ts <- ts(ser_tecidoevestuario[,2], start = tm4, frequency = 12)
+autoplot(decompose(ser_meveiseeletro_ts))
 
+#
 sq5 <- Quandl::Quandl(code = "BCB/1557", type = "raw", collapse = "monthly", api_key = "gGdvN9gXsx9hxHMTWPNL")
 ser_auto <- sq5[seq(dim(sq5)[1],1),]     # Podemos inverter a sequencia, se nos parecer mais conveniente
+tm5 = c(as.numeric(substring(ser_auto[1,1],1,4)), as.numeric(substring(ser_auto[1,1],6,7)))
+ser_auto_ts <- ts(ser_auto[,2], start = tm5, frequency = 12)
+autoplot(decompose(ser_auto_ts))
 
+#
 sq6 <- Quandl::Quandl(code = "BCB/1570", type = "raw", collapse = "monthly", api_key = "gGdvN9gXsx9hxHMTWPNL")
 ser_supermercado <- sq6[seq(dim(sq6)[1],1),]     # Podemos inverter a sequencia, se nos parecer mais conveniente
+tm6 = c(as.numeric(substring(ser_supermercado[1,1],1,4)), as.numeric(substring(ser_supermercado[1,1],6,7)))
+ser_supermercado_ts <- ts(ser_supermercado[,2], start = tm6, frequency = 12)
+autoplot(decompose(ser_supermercado_ts))
 
-### LM Multiplo
+### LM Múltiplo
 
 
+
+
+
+### ARIMA
 ser_auto
 ser_auto_ts <- ts(ser_auto[,2], start = c(as.numeric(substring(ser_auto[1,1],1,4)), as.numeric(substring(ser_auto[1,1],6,7))), frequency = 12)
 
 library(forecast) # Pacote que possibilita a utilização de modelos de previsão estatística, como o modelo arima
 ser_auto_tsa <- auto.arima(ser_auto_ts, seasonal = T, trace = F, ic = "aic")
-ser_auto_tsaf <- forecast(ser_auto_tsa, h=12)
+ser_auto_tsaf <- forecast(ser_auto_tsa, h=18)
 
 library(ggplot2)
 autoplot(ser_auto_tsaf)+
@@ -219,6 +240,70 @@ autoplot(ser_auto_tsaf)+
 # Questão 23
 # Projete os proximos 6 valores para a série 1518, a partir de uma amostra 
 # de as.Date("2010-01-01") à as.Date("2020-01-01"), através de um auto.arima() que minimize "bic"
+
+
+
+
+
+# Suavização Exponencial
+# install.packages("smooth")
+library(smooth)
+# https://johannesmehlem.com/blog/exponential-smoothing-time-series-forecasting-r/
+
+HoltWinters()   # Disponível no R-base
+ses()           # {forecast}
+
+es(ser_supermercado_ts, h=18, holdout=TRUE, silent=FALSE)
+es(ser_supermercado_ts, h=36, holdout=TRUE, silent=FALSE)
+
+ets1 <- ets(ser_supermercado_ts)
+summary(ets1)
+forecast(ets1,h=36,level=0.95)
+accuracy(ets1)
+residuals(forecast(ets1,h=36,level=0.95))
+mean(residuals(forecast(ets1,h=36,level=0.95)))
+hist(residuals(forecast(ets1,h=36,level=0.95)))
+Box.test(residuals(forecast(ets1,h=36,level=0.95)), lag=20, type="Ljung-Box")
+diff(ser_supermercado_ts, differences = 1)
+acf(diff(ser_supermercado_ts, differences = 1), lag.max = 20)
+pacf(diff(ser_supermercado_ts, differences = 1), lag.max = 20)
+
+
+ses1 <- ses(ser_supermercado_ts)
+summary(ses1)
+forecast(ses1,h=36,level=0.95)
+plot(ses1)
+accuracy(ses1)
+residuals(forecast(ses1,h=36,level=0.95))
+mean(residuals(ses1))
+hist(residuals(ses1))
+diff(ser_supermercado_ts, differences = 1)
+acf(diff(ser_supermercado_ts, differences = 1), lag.max = 20)
+
+
+hw1 <- hw(ser_supermercado_ts)
+summary(hw1)
+forecast(hw1, h=18)
+plot(hw1)
+accuracy(hw1)
+residuals(forecast(hw1, h=18))
+mean(residuals(forecast(hw1, h=18)))
+hist(residuals(forecast(hw1, h=18)))
+Box.test(residuals(forecast(hw1, h=18)), lag=20, type="Ljung-Box")
+diff(ser_supermercado_ts, differences = 1)
+
+
+
+
+
+train <- window(ser_supermercado_ts, end = c(2018, 3))
+test <- window(ser_supermercado_ts, start = c(2018, 4))
+fit_hw_train <- hw(train)
+fit_auto_train <- forecast(train)
+accuracy(forecast(fit_hw_train), test)
+accuracy(forecast(fit_auto_train), test) ["Test set", "RMSE"]
+
+
 
 
 
