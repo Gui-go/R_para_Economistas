@@ -108,6 +108,13 @@ str(dados_ts)             # Deve-se sempre ter atençao na estrutura do seu obje
 dim(dados_ts)
 summary(dados_ts)
 
+sd_pcig <- data.frame(
+  round(sd(dados_ts[, 1]), 2),
+  round(sd(dados_ts[, 2]), 2),
+  round(sd(dados_ts[, 3]), 2),
+  round(sd(dados_ts[, 4]), 2)
+)
+
 
 # Visualização -----------------------------------------------------------
 ggplot(dados_ts, aes(seq(as.Date("2000/1/1"), by = "quarter", length.out = nrow(dados_ts))))+

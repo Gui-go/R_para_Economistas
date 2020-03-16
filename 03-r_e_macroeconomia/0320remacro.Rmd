@@ -26,14 +26,24 @@ theme_set(theme_classic())   # Todos os mapas virão com theme_classic() como de
 #### Este é um documento R Markdown, uma maneira simples de criar documentos dinâmicos em HTML, PDF, entre outros formatos.
 Para mais detalhes, acesse <http://rmarkdown.rstudio.com> ou [Cheatsheet](https://rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf)
 
+#### Os dados das Contas Nacionais Trimestrais foram obtidos através da API do pacote {sidrar}
 
 ```{r api_sidra, message=FALSE}
-dados_sidra <- get_sidra(
-  api = "/t/1846/n1/all/v/all/p/all/c11255/90707,93404,93405,93406,102880/d/v585%200")
-
+dados_sidra <- get_sidra(api = "/t/1846/n1/all/v/all/p/all/c11255/90707,93404,93405,93406,102880/d/v585%200")
 ```
 
-Após feita a manipulação na base de dados, chegamos a um dataset como o seguinte:
+#### As Contas Nacionais Trimestrais são compostas por:
+- PIB - Produto Interno Bruto;
+- C - Consumo das famílias;
+- G - gastos do Governo;
+- FBKF - Formação Bruta de Kapital Fixo;
+- VE - Variação de Estoque.
+
+#### A partir das séries temporais das Contas Nacionais Trimestrais, foram calculados os índices encadeados com o mesmo semestre do ano anterior. A formula utilizada para o cálculo do índice encadeado é como a seguinte: 
+
+$$
+I_{t+4} = \frac{(p_{t+4}-p_{t})}{p_t} \times 100
+$$
 
 ```{r chunk2, echo=FALSE, message=FALSE}
 cnt <- dados_sidra %>%
@@ -85,6 +95,13 @@ dados_tsp <- ts(chained, start = c(i_macro$ano[1], i_macro$tri[1]), freq = 4)
 
 dados_ts <- window(dados_tsp, start = c(2001, 1))    # Devido ao método encadeado, o ano de 2000 acaba sendo == 0
 
+sd_pcig <- data.frame(
+  round(sd(dados_ts[, 1]), 2),
+  round(sd(dados_ts[, 2]), 2),
+  round(sd(dados_ts[, 3]), 2),
+  round(sd(dados_ts[, 4]), 2)
+)
+
 df_cnt <- data.frame(
   ano = rep(2000:2019, each=4),
   tri = rep(c(1:4), length.out = nrow(chained)),
@@ -100,7 +117,7 @@ DT::datatable(
 )
 ```
 
-
+#### Logo percebe-se que a variabilidade dos Investimentos Privados é notavelmente maior que a variabilidade das demais séries encadeadas. O desvio padrão do PIB, C, I e G são `r sd_pcig[1]`, `r sd_pcig[2]`, `r sd_pcig[3]`, `r sd_pcig[4]`, respectivamente.
 
 ```{r chunk3, echo=FALSE, message=FALSE, fig.width=12, fig.height=8}
 

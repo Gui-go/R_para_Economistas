@@ -37,6 +37,7 @@ A <- function(r){
 }
 A(2)
 # Defina uma função de correlação e a compare com a função    stats::cor()
+# R:
 
 
 # Talvez o mais popular pacote para visualização de gráficos em R seja o {ggplot2}
@@ -49,17 +50,19 @@ ggplot2::ggplot(data = mtcars, mapping = aes(x = mtcars$hp, y = mtcars$mpg)) +
 ggplot(mtcars, aes(mtcars$hp, mtcars$mpg)) +
   geom_point()
 
-
+# Podemos adicionar novas camadas ao gráfico
 ggplot(data = mtcars, mapping = aes(x = mtcars$hp, y = mtcars$mpg)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE, color = "red")
 
-ggplot2::ggplot(data = mtcars) +
-  ggplot2::geom_point(mapping = aes(x = mtcars$hp, y = mtcars$mpg))
+# Os dados podem ser explicitados de modo geral em ggplot() ou de maneira específica em geom_...()
+ggplot2::ggplot(data = mtcars, mapping = aes(x = mtcars$hp, y = mtcars$mpg)) +
+  ggplot2::geom_point()+
+  geom_smooth(se = FALSE)
 
 ggplot(data = mtcars) +
   geom_point(mapping = aes(x = mtcars$hp, y = mtcars$mpg)) +
-  geom_smooth(mapping = aes(x = mtcars$hp, y = mtcars$mpg), method = "lm", se = FALSE, color = "red")
+  geom_smooth(mapping = aes(x = mtcars$hp, y = mtcars$mpg), method = "loess", se = FALSE, color = "red")
 
 
 # Regressão linear simples
@@ -93,109 +96,137 @@ ggplot(data = mtcars, aes(x = mtcars$hp, y = mtcars$mpg)) +
        subtitle = "Milhas por galão e horse power", 
        x = "Horse Power",
        y = "Milhas Por Galão",
-       caption = "R_para_Economistas")
-
+       caption = "R_para_Economistas")+
+  theme_minimal()
 
 # \n  para uma nova linha
 
-# correlation graph w\ error distances
+# correlation graph w\ error distances#############################
 
-# Estatística descritiva
-# Oq é
 
 # install.packages("Quandl")
 library("Quandl")
 ?Quandl
 
-# API = Contrato
-# BCB/433 = IPCA
+# API == Contrato
+# BCB/433 == IPCA >> BACEN
 # api_key = Esta chave é pessoal, deve ser utilizada somente para esse curso.
 # Para obter sua própria api_key, acesse:
-sq1 <- Quandl::Quandl(paste0("BCB/433"), type = "raw", collapse = "monthly", api_key = "gGdvN9gXsx9hxHMTWPNL")
-sq2 <- sq1[seq(dim(sq)[1],1),]     # Podemos inverter a sequencia, se nos parecer masi conveniente
+sq1 <- Quandl::Quandl(code = "BCB/433", type = "raw", collapse = "monthly", api_key = "gGdvN9gXsx9hxHMTWPNL")
+ser_ipca <- sq1[seq(dim(sq1)[1],1),]     # Podemos inverter a sequencia, se nos parecer mais conveniente
 
-tm = c(as.numeric(substring(sq2[1,1],1,4)), as.numeric(substring(sq2[1,1],6,7)))
+tm = c(as.numeric(substring(ser_ipca[1,1],1,4)), as.numeric(substring(ser_ipca[1,1],6,7)))
 
-sqts <- ts(sq2[,2], start = tm, frequency = 12)
+sqts <- ts(ser_ipca[,2], start = tm, frequency = 12)
 
 # install.packages("ggfortify")
-library("ggfortify")              # ts em ggplot
+library("ggfortify")              # possibilita ts em ggplot
 
 autoplot(sqts)
 
 autoplot(sqts)+
-  geom_line(aes(y = mean(sqts)), color = "red", linetype = "dotted") +
-  geom_line(aes(y = median(sqts)), color = "blue", linetype = "dotted") +
-  annotate(geom = "text", x = Sys.Date(), y = 60, label = "hoje") +
-  annotate(geom = "text", x = as.Date("1994-02-27"), y = 60, label = "Plano\nReal", color = "darkgreen")+
-  geom_rect(aes(xmin = as.Date('2003-01-01'), ymin = -Inf, 
+  geom_rect(aes(xmin = as.Date('1995-01-01'), ymin = -Inf,
+                xmax = as.Date('2003-01-01'), ymax = Inf),
+            fill = "blue", alpha = 0.01) + # Periodo FHC
+  geom_rect(aes(xmin = as.Date('2003-01-01'), ymin = -Inf,
                 xmax = as.Date('2011-01-01'), ymax = Inf),
-            fill = "steelblue", alpha = 0.01) + # Pediodo lula
-  labs(title = "autoplot...",subtitle = "Série...", y = "ICAP::::")+
+            fill = "tomato3", alpha = 0.01) + # Periodo lula
+  geom_rect(aes(xmin = as.Date('2011-01-01'), ymin = -Inf,
+                xmax = as.Date('2016-08-31'), ymax = Inf),
+            fill = "red", alpha = 0.01) + # Periodo Dilma
+  geom_rect(aes(xmin = as.Date('2016-08-31'), ymin = -Inf,
+                xmax = as.Date('2018-12-31'), ymax = Inf),
+            fill = "violetred", alpha = 0.01) + # Periodo Temer
+  annotate(geom = "text", x = as.Date("1994-02-27"), y = 60, label = "Plano\nReal", color = "darkgreen")+
+  annotate(geom = "text", x = as.Date(Sys.Date()), y = 60, label = "Hoje") +
+  geom_line(aes(y = mean(sqts)), color = "red", linetype = "dotted", size = 1.1) +
+  geom_line(aes(y = median(sqts)), color = "blue", linetype = "dotted", size = 1.1) +
+  labs(
+    title = "Gráfico da perspectiva político-inflacionária no Brasil",
+    subtitle = "IPCA entre 1980 e 2020", 
+    y = "IPCA"
+  )+
   theme_minimal()
 
+# Algumas cores possiveis
+colours()
   
 # Questao
-# Demonstre, em um gráfico de linhas, as principais estatísticas relacionadas a série temporal BCB... tecidos
+# Demonstre, em um gráfico de linhas, as principais estatísticas relacionadas a série temporal 
+# "Índice de volume de vendas no varejo - Tecidos, vestuário e calçados - Santa Catarina" do BACEN
+
 
 
 
 
 # Boxplot graf inflation
 library(dplyr)
-sq3 <- sq2 %>% filter(between(Date, as.Date("2005-01-01"), as.Date("2020-01-01")))
-sp <- data.frame(mes = substr(sq3[seq(1:nrow(sq3)),1], 6 , 7),
-                 ano = substr(sq3[seq(1:nrow(sq3)),1], 1 , 4),
-                 dados = sq3[1:nrow(sq3), 2])
-str(sp)
-# SP <- SP[input$SLDAD[1]:input$SLDAD[2],]
+ser_ipca_f <- ser_ipca %>% filter(between(Date, as.Date("2005-01-01"), as.Date("2020-01-01")))
+df_ipca <- data.frame(mes = substr(ser_ipca_f[seq(1:nrow(ser_ipca_f)),1], 6 , 7),
+                      ano = substr(ser_ipca_f[seq(1:nrow(ser_ipca_f)),1], 1 , 4),
+                      dados = ser_ipca_f[1:nrow(ser_ipca_f), 2])
 
-ggplot(sp , aes(x = factor(sp$mes, levels = c("01","02","03","04","05","06","07","08","09","10","11","12"), ordered = T),
-                y = sp$dados, group = sp$mes))+
+str(df_ipca)
+
+ggplot(df_ipca , aes(x = factor(df_ipca$mes, levels = c("01","02","03","04","05","06","07","08","09","10","11","12"), ordered = T),
+                     y = df_ipca$dados, group = df_ipca$mes))+
   geom_boxplot()+
   stat_summary(fun.y = mean, geom = "point", shape = 18, size = 1, color = "red", alpha = 0.8)+
-  labs(title = "Box Plot dividido entre os meses do ano",
+  labs(title = "Box-Plot da inflação dividido entre os meses do ano",
+       subtitle = "de 2005 a 2019",
        x = "Meses do ano",
-       y = "IPCA.....")+ 
+       y = "IPCA",
+       caption = "R_para_Economistas")+ 
+  geom_hline(yintercept = mean(sp$dados), color = "red")+
   geom_hline(yintercept = median(sp$dados), color = "blue")+
   theme_minimal()
 
-# Nice inflation history plotly graph
-
-
-
+##
 
 # Estatístca indutiva
 
-sq3   # df from = as.date("2005-01-01")
-sqts <- ts(sq3[,2], start = c(as.numeric(substring(sq3[1,1],1,4)), as.numeric(substring(sq3[1,1],6,7))), frequency = 12)
-library(forecast)
-tsa <- auto.arima(sqts, seasonal = T, trace = F, ic = "aic")
-ff <- forecast(tsa, h=12)
+sq3 <- Quandl::Quandl(code = "BCB/1518", type = "raw", collapse = "monthly", api_key = "gGdvN9gXsx9hxHMTWPNL")
+ser_tecidoevestuario <- sq3[seq(dim(sq3)[1],1),]     # Podemos inverter a sequencia, se nos parecer mais conveniente
 
-# nn <- arima_data()[["arma"]]
-# ff <- forecast(arima_data(), h = input$hor)
+sq4 <- Quandl::Quandl(code = "BCB/1531", type = "raw", collapse = "monthly", api_key = "gGdvN9gXsx9hxHMTWPNL")
+ser_meveiseeletro <- sq4[seq(dim(sq4)[1],1),]     # Podemos inverter a sequencia, se nos parecer mais conveniente
+
+sq5 <- Quandl::Quandl(code = "BCB/1557", type = "raw", collapse = "monthly", api_key = "gGdvN9gXsx9hxHMTWPNL")
+ser_auto <- sq5[seq(dim(sq5)[1],1),]     # Podemos inverter a sequencia, se nos parecer mais conveniente
+
+sq6 <- Quandl::Quandl(code = "BCB/1570", type = "raw", collapse = "monthly", api_key = "gGdvN9gXsx9hxHMTWPNL")
+ser_supermercado <- sq6[seq(dim(sq6)[1],1),]     # Podemos inverter a sequencia, se nos parecer mais conveniente
+
+### LM Multiplo
+
+
+ser_auto
+ser_auto_ts <- ts(ser_auto[,2], start = c(as.numeric(substring(ser_auto[1,1],1,4)), as.numeric(substring(ser_auto[1,1],6,7))), frequency = 12)
+
+library(forecast) # Pacote que possibilita a utilização de modelos de previsão estatística, como o modelo arima
+ser_auto_tsa <- auto.arima(ser_auto_ts, seasonal = T, trace = F, ic = "aic")
+ser_auto_tsaf <- forecast(ser_auto_tsa, h=12)
+
 library(ggplot2)
-autoplot(ff)+
-  autolayer(ff$mean, color = "blue")+
-  labs(y = "IPCA...", 
+autoplot(ser_auto_tsaf)+
+  autolayer(ser_auto_tsaf$mean, color = "blue")+
+  labs(y = "Índice de volume de vendas de Automóveis em Santa Catarina", 
        x = "Observações")+
   theme(legend.position = "none")+
   theme_minimal()
 
 
 # Questão 23
-# Projete os proximos 6 valores para a série 1518, a partir de uma amostra de as.Date("2010-01-01") e as.Date("2020-01-01"), através de um auto.arima() que minimize "bic"
-
-
-
-
-
-
+# Projete os proximos 6 valores para a série 1518, a partir de uma amostra 
+# de as.Date("2010-01-01") à as.Date("2020-01-01"), através de um auto.arima() que minimize "bic"
 
 
 
 ## Recomendações
-# Pacote Esquisse
-# Radiant
 
+# Pacote {esquisse}
+# https://medium.com/data-hackers/gerando-gr%C3%A1ficos-com-o-mouse-os-melhores-links-da-semana-7-bf4151996e75
+# https://www.linkedin.com/pulse/interface-drag-drop-para-constru%C3%A7%C3%A3o-de-gr%C3%A1ficos-r-da-silva-j%C3%BAnior/?trk=related_artice_Interface%20%26amp%3Bamp%3Bquot%3Bdrag%20and%20drop%26amp%3Bamp%3Bquot%3B%E2%80%8B%20para%20constru%C3%A7%C3%A3o%20de%20gr%C3%A1ficos%20no%20R_article-card_title
+
+# Pacote {radiant}
+# https://cran.r-project.org/web/packages/radiant.data/readme/README.html
