@@ -349,6 +349,12 @@ c7==c8
 # str_detect(string = c7, pattern = "sem")
 
 
+## Factor
+
+# Explain factors...
+
+
+# (...)
 
 ## data.frame
 
@@ -431,6 +437,39 @@ ll[["item7"]]["var1"]      #   Retorna a coluna
 ll[["item7"]][,"var1"]     #   Retorna o vetor
 ll[["item7"]][,"var1"][2]
 
+## Outros classes de ojetos
+array()
+array(data = c(1:4), dim = c(2, 2), dimnames = list(c("r1", "r2"), c("c1", "c2")))
+array(data = 1:100, dim = c(5, 10), dimnames = list(paste0("row", 1:5), paste0("col", 1:10)))
+array(1:9, c(3, 3))
+array(1:9, 30)
+
+date()
+Sys.Date()
+Sys.time()
+as.Date("2005-10-21")
+as.Date("2020-12-25")
+as.Date('1/15/2001',format='%m/%d/%Y')
+as.Date('April 26, 2001',format='%B %d, %Y')
+as.Date('22JUN01',format='%d%b%y')
+
+seq(as.Date('2020-12-25'),by='days',length=10)
+seq(as.Date('2020-01-01'),by='quarter',length=12)
+seq(as.Date('2020-01-01'),by='week',length=52); paste0("Há ", round(365/7, 3), " semanas em 1 ano")
+seq.Date(from = Sys.Date(), by = "day", length.out = 100)
+
+
+# Functions
+f1 <- function(par1 = arg1){
+  resultado = paste0("Olá, ", par1, "..")
+  return(resultado)
+}
+f1("Guilherme")
+
+
+
+
+
 
 ### Pacotes em R
 library(datasets)
@@ -470,7 +509,25 @@ stats::cor()                     # Função que retorna a correlação entre doi
 
 
 
+# MAIS
 
+# %in% --------------------------------------------------------------------
+%in%
+  mtcars
+mtcars$cyl %in% 4
+mtcars[mtcars$cyl %in% 4, ]
+v1 <- c("a1","b2","c1","d2")
+v2 <- c("g1","x2","d2","e2","f1","a1","c2","b2","a2")
+v1 %in% v2
+v1[v1 %in% v2]
+
+
+# split() -----------------------------------------------------------------
+
+?split
+?order()
+?rank()
+?unique()
 
 
 ### Recomendações:

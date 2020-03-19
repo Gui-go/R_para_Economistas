@@ -36,8 +36,20 @@ A <- function(r){
   return(area)
 }
 A(2)
+
 # Defina uma função de correlação e a compare com a função    stats::cor()
 # R:
+
+
+
+
+
+# De modo semelhante, podemos normalizar um vetor
+noramlize <- function(x){
+  (x - min(x)) / (max(x) - min(x))
+}
+noramlize(cars$speed)
+
 
 
 # Talvez o mais popular pacote para visualização de gráficos em R seja o {ggplot2}
