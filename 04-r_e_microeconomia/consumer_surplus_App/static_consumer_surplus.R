@@ -1,5 +1,6 @@
 library(tidyverse)
 
+# Função Demanda e Função Preço
 D <- function(p){
   demand = cl + ca * p
   return(demand)

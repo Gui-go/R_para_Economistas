@@ -11,21 +11,22 @@ ui <- fluidPage(
     
     column(width = 3,
            numericInput("price1_ui",
-                        "Price 1:",
+                        "Preço 1:",
                         min = 1,
                         max = 10,
                         value = 7),
            numericInput("price2_ui",
-                        "Price 2:",
+                        "Preço 2:",
                         min = 1,
                         max = 10,
                         value = 5),
            hr(),
-           textOutput(outputId = "txt1"),
-           textOutput(outputId = "txt2")
+           uiOutput(outputId = "txt1"),
+           uiOutput(outputId = "txt2"),
+           hr()
     ),
     column(width = 9,
-           plotOutput("distPlot")
+           plotOutput("plot")
     )
 )
 
@@ -39,15 +40,15 @@ server <- function(input, output) {
         input$price2_ui
     })
 
-    output$txt1 <- renderText({
-        paste0("$$D(", reac1(), ")=20-2(", reac1(), ")=", 20-2*reac1(), "$$")
+    output$txt1 <- renderUI({
+        withMathJax(paste0("$$D( ", reac1(), " ) = 20 - 2( ", reac1(), " ) = ", 20 - 2 * reac1(), " $$"))
     })
     
-    output$txt2 <- renderText({
-        paste0("$$D(", reac2(), ")=20-2(", reac2(), ")=", 20-2*reac2(), "$$")
+    output$txt2 <- renderUI({
+        withMathJax(paste0("$$D( ", reac2(), " ) = 20 - 2( ", reac2(), " ) = ", 20 - 2 * reac2(), " $$"))
     })
-
-    output$distPlot <- renderPlot({
+    
+    output$plot <- renderPlot({
         D <- function(p){
             demand = cl + ca * p
             return(demand)
