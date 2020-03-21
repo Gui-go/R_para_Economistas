@@ -81,7 +81,7 @@ ggplot(data = mtcars) +
 ?lm()
 
 simple_model <- lm(mtcars$hp ~ mtcars$mpg, mtcars)
-simple_model
+simple_model # horse power ~ miles per gallon
 
 simple_model[]
 

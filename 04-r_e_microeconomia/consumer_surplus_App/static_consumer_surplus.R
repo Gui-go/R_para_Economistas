@@ -1,12 +1,13 @@
 library(tidyverse)
 
+cl = 200; ca = -2
 # Função Demanda e Função Preço
 D <- function(p){
   demand = cl + ca * p
   return(demand)
 }
 P <- function(d){
-  price = (d - 20) / - 2
+  price = (d - cl) / ca
   return(price)
 }
 
@@ -15,7 +16,7 @@ D(10); P(D(10))
 D(0); P(D(0))
 
 
-p1 = 9; p2 = 7
+p1 = 90; p2 = 70
 df <- data.frame(
   y = c(P(0), 0, p1, p1, 0, p2, p2, 0, min(p1, p2)),
   x = c(0, D(0), D(p1), 0, D(p1), D(p2), 0, D(p2), min(D(p1), D(p2))),

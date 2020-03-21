@@ -94,3 +94,10 @@ $$ x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a} $$
 * [RMarkdown-lesson1](https://rmarkdown.rstudio.com/lesson-1.html)
 * [Cheatsheet](https://rstudio.com/wp-content/uploads/2016/03/rmarkdown-cheatsheet-2.0.pdf)
 * [Basic RMarkdown](https://rmarkdown.rstudio.com/authoring_basics.html)
+
+
+## Além do R Markdown, o R oferece diversas outras ferramentas
+
+* Blogdown
+* Shiny
+* (...)
