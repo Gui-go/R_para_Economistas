@@ -1,3 +1,9 @@
+# INICIANDO AS ATIVIDADES NO SISTEMA R
+# Introdução ao R e classes de objetos
+# Faremos diversos procedimentos para conhecer um pouco do funcionamento do Sistema R.
+# Prof. Arlei Fachinello e Guilherme Viegas
+
+
 ####   Introdução ao R e classes de objetos
 
 ###   Apresentação - Mosrtar a sintaxe do R, janelas, script, console, environment
@@ -287,28 +293,6 @@ det(m4)
 I <- diag(c(1, 1, 1, 1)) # Matriz Identidade
 I
 
-A <- matrix(c(4,4,-2,2,6,2,2,8,4),3,3)
-AI <- solve(A)
-
-A%*%AI
-
- 
-solve(m2)
-
-# Operções entre matrizes (Regras matriciais)
-
-
-# Regra de kran
-
-
-
-# Questão:
-# Resolva esse sistema linear através de Kran
-
-
-
-
-
 ## character  (string)
 
 c1 <- "Character"
@@ -473,10 +457,6 @@ f1 <- function(par1 = arg1){
 f1("Guilherme")
 
 
-
-
-
-
 ### Pacotes em R
 library(datasets)
 datasets::cars
@@ -518,7 +498,7 @@ stats::cor()                     # Função que retorna a correlação entre doi
 # MAIS
 
 # %in% --------------------------------------------------------------------
-%in% 
+# %in%  # Contem em
 mtcars
 mtcars$cyl %in% 4
 mtcars[mtcars$cyl %in% 4, ]
@@ -564,4 +544,57 @@ iris %>% head(2)
 
 # 5. Cheatsheet - Folha de dicas
 # https://rstudio.com/resources/cheatsheets/
+
+
+
+# Desafio
+
+#1 Qual a área de um terreno com 20 metros de largura e 50 de comprimento?
+
+
+
+
+#2 Qual a mínima, máxima, variancia, desvio padrão, média e mediana da série vv 
+vv <- c(1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0.1, 2, 3, 4, 5, 6, 7, 8, 9999, 1, 2, 3, 4, 5, 6, 7, 8, 9)
+
+
+
+
+#3 No seguinte vetor de strings (characters), deixe apenas SEXTA em letras maiúsculas utilizando um função
+semana <- c('segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado', 'domingo')
+
+
+
+
+#4 Crie um data.frame com um vetor com os dias da semana recem alterados, um vetor com valores de 1 a 7 e outro vetor com valores de 7 a 1:
+
+
+
+
+#5 Coloque tudo isso em uma lista, vv, semana e df fazendo parte de apenas uma lista
+
+
+
+
+#6 Qual o comprimeto de cada um dos objetos dentro da lista
+
+
+
+
+#7 Maria pegou 100 reais emprestado de sua Mãe há 3 meses e agora ele quer pagar de volta com 10% de juros simples ao mês, quanto ela deverá retornar a sua Mãe
+
+
+
+#8 A Mãe de Maria disse que Maria deveria pagar com juros composto, quanto Maria deveria pagar então
+
+
+
+#9 Jack guardou 6000 em baixo do colchão há dois anos. Considerando que a inflação no primeiro ano foi de 3.45% e 5.4% no segundo, quanto dinheiro ela perdeu?
+
+
+
+
+#10 Joana ganhou na rapadinha 100000 na trimania e decidiu guardar o dinheiro. Após 18 meses guardados a uma taxa de 1.1% de juros ao mês, quanto ela tem agora?
+
+
 
