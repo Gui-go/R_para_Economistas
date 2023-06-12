@@ -13,17 +13,17 @@ var2 <- 13
 var3 <- var1 * var2
 var3
 
-###   Diferentemente de nós humanos, o R, assim como outras linguagens de programação, não possui boa capacidade de abstração.
+###   Diferentemente de nós humanos, o R, não possui boa capacidade de abstração.
 
-###   Em termos mais claros, o que deve-se deixar claro é que por vezes seu código irá retornar resultados inesperados e dependerá da sua capacidade de abstração para perceber erros de sintaxe.
+###   Em termos mais claros, deve-se ter claro que por vezes seu código irá retornar resultados inesperados e dependerá da sua capacidade de abstração para perceber erros de sintaxe.
 
 ###   O R é "case sensitive" e por vezes basta uma boa revisão do código para resolver alguns obstaculos.
 
 #   R != RStudio
 
 #   R:              https://www.r-project.org/
-#   RStudio:        https://rstudio.com/
-
+#   RStudio:        https://rstudio.com/         ->        https://posit.co/
+#   R Cloud:        https://posit.cloud/
 
 #   Introdução ao R e classes de objetos
 
